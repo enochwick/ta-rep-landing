@@ -271,6 +271,10 @@
   .assure span{display:flex;align-items:center;gap:10px;font-size:14.5px;color:var(--ink);font-weight:600;}
   .assure svg{width:18px;height:18px;stroke:var(--teal);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
   .apply-split .form-card{max-width:none;margin:0;}
+  /* Slower, more deliberate reveal for the Apply steps */
+  .apply-aside .reveal.in{animation-duration:1.15s;}
+  .steps .step:nth-child(2).reveal.in{animation-delay:.42s;}
+  .steps .step:nth-child(3).reveal.in{animation-delay:.84s;}
 
   /* Booking step (revealed) */
   .book{display:none;text-align:center;}
