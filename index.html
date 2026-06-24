@@ -324,12 +324,16 @@
   }
 
   /* Mobile header + hero sizing */
+  .cta-short{display:none;}
   @media(max-width:560px){
     .top-in{padding:11px 16px;}
     .top img{height:26px;}
     .top a{flex-shrink:0;}
-    .top .cta-mini{font-size:12.5px;padding:9px 15px;}
+    .top .cta-mini{font-size:12.5px;padding:9px 16px;}
+    .cta-full{display:none;}
+    .cta-short{display:inline;}
     .ghero h1{font-size:27px;}
+    .ghero-in{padding-top:124px;}
   }
 </style>
 </head>
@@ -351,7 +355,7 @@
       <a href="#benefits">What You Get</a>
       <a href="#proof">Proof</a>
     </nav>
-    <a href="#apply" class="cta-mini">Join the network</a>
+    <a href="#apply" class="cta-mini"><span class="cta-full">Join the network</span><span class="cta-short">Join Us</span></a>
   </div>
 </header>
 
