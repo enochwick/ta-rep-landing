@@ -675,7 +675,7 @@
   // Scroll reveals for the body sections (below the hero)
   if(!reduceMotion&&'IntersectionObserver' in window){
     var sels='.sec > .sec-eye,.sec > h2,.sec > .lead,.why,.get-shot,.vp,.platform-in > div,'+
-             '.proof-card,.midcta .mt,.form-card';
+             '.proof-card,.midcta .mt,.form-card,.apply-aside .sec-eye,.apply-aside h2,.apply-aside .lead,.steps .step,.assure span';
     var els=Array.prototype.slice.call(document.querySelectorAll(sels));
     els.forEach(function(el){
       el.classList.add('reveal');
