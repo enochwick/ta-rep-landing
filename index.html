@@ -325,7 +325,7 @@
 
   /* ===== Mobile card carousels ===== */
   @media(max-width:767px){
-    .why-grid,.vp-grid,.proof-grid{display:flex;grid-template-columns:none;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:2px 0 16px;scrollbar-width:none;}
+    .why-grid,.vp-grid,.proof-grid{display:flex;grid-template-columns:none;gap:14px;overflow-x:auto;overflow-y:visible;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:10px 4px 30px;scrollbar-width:none;}
     .why-grid::-webkit-scrollbar,.vp-grid::-webkit-scrollbar,.proof-grid::-webkit-scrollbar{display:none;}
     .why-grid>*,.vp-grid>*,.proof-grid>*{flex:0 0 85%;scroll-snap-align:start;opacity:1!important;animation:none!important;transform:none!important;}
     .proof-grid{margin-top:0!important;}
@@ -699,6 +699,31 @@
     els.forEach(function(el){io.observe(el);});
   }
 
+})();
+</script>
+<script>
+/* Mobile card carousels: auto-advance every 10s */
+(function(){
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+  var mq=window.matchMedia('(max-width:767px)');
+  var items=[];
+  document.querySelectorAll('.why-grid,.vp-grid,.proof-grid').forEach(function(car){
+    var o={timer:null,resume:null};
+    o.step=function(){
+      var cs=car.children;if(cs.length<2)return;
+      var base=cs[0].offsetLeft,i=0,min=Infinity;
+      for(var k=0;k<cs.length;k++){var d=Math.abs((cs[k].offsetLeft-base)-car.scrollLeft);if(d<min){min=d;i=k;}}
+      var ni=(i+1)%cs.length;
+      car.scrollTo({left:cs[ni].offsetLeft-base,behavior:'smooth'});
+    };
+    o.stop=function(){if(o.timer){clearInterval(o.timer);o.timer=null;}};
+    o.start=function(){o.stop();if(mq.matches&&!reduce.matches){o.timer=setInterval(o.step,10000);}};
+    ['pointerdown','touchstart','wheel'].forEach(function(ev){
+      car.addEventListener(ev,function(){o.stop();clearTimeout(o.resume);o.resume=setTimeout(o.start,10000);},{passive:true});
+    });
+    items.push(o);o.start();
+  });
+  if(mq.addEventListener)mq.addEventListener('change',function(){items.forEach(function(o){o.start();});});
 })();
 </script>
 </body>
