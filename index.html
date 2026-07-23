@@ -846,8 +846,8 @@
   function add(txt,who){var d=document.createElement('div');d.className='taw-m '+(who==='u'?'taw-user':'taw-bot');d.textContent=txt;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
   function answer(q){var s=q.toLowerCase(),best=null,score=0;KB.forEach(function(e){var n=0;e.k.forEach(function(k){if(s.indexOf(k)>-1)n+=k.length;});if(n>score){score=n;best=e;}});setTimeout(function(){add(best?best.a:FALLBACK,'b');},450);}
   function ask(q){if(!q)return;add(q,'u');input.value='';answer(q);}
-  bubble.addEventListener('click',function(){var open=panel.classList.toggle('open');bubble.setAttribute('aria-expanded',open?'true':'false');if(open&&!msgs.children.length){add('Hi! I’m the Total Ancillary assistant. Ask me about our platform, products, services, or the independent rep program.','b');}if(open)input.focus();});
-  closeBtn.addEventListener('click',function(){panel.classList.remove('open');bubble.setAttribute('aria-expanded','false');});
+  bubble.addEventListener('click',function(){panel.classList.add('open');bubble.style.display='none';bubble.setAttribute('aria-expanded','true');if(!msgs.children.length){add('Hi! I’m the Total Ancillary assistant. Ask me about our platform, products, services, or the independent rep program.','b');}input.focus();});
+  closeBtn.addEventListener('click',function(){panel.classList.remove('open');bubble.style.display='';bubble.setAttribute('aria-expanded','false');});
   send.addEventListener('click',function(){ask(input.value.trim());});
   input.addEventListener('keydown',function(e){if(e.key==='Enter')ask(input.value.trim());});
   CHIPS.forEach(function(c){var b=document.createElement('button');b.className='taw-chip';b.type='button';b.textContent=c;b.addEventListener('click',function(){ask(c);});chips.appendChild(b);});
