@@ -857,7 +857,7 @@
     msgs.scrollTop=Math.max(0,d.offsetTop-msgs.offsetTop-8);
     var tokens=text.split(/(\s+)/),i=0;
     (function tick(){
-      if(i>=tokens.length){done&&done();return;}
+      if(i>=tokens.length){done&&done(d);return;}
       d.textContent+=tokens[i];
       var isSpace=/^\s+$/.test(tokens[i]);i++;
       setTimeout(tick,isSpace?0:34);
@@ -871,7 +871,7 @@
     var t=showTyping();
     setTimeout(function(){
       t.remove();
-      typeReply(pick(q),function(){chips.style.display='flex';busy=false;});
+      typeReply(pick(q),function(el){chips.style.display='flex';busy=false;requestAnimationFrame(function(){if(el.offsetHeight<=msgs.clientHeight){msgs.scrollTop=el.offsetTop-msgs.offsetTop+el.offsetHeight-msgs.clientHeight+12;}});});
     },700);
   }
   input.addEventListener('input',autosize);
