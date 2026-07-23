@@ -376,7 +376,7 @@
   .taw-bubble{position:fixed;right:18px;bottom:18px;z-index:80;width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,#0CA689,#16489F);box-shadow:0 10px 30px -8px rgba(10,40,100,.55);display:flex;align-items:center;justify-content:center;transition:transform .2s;}
   .taw-bubble:hover{transform:scale(1.06);}
   .taw-bubble svg{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-  .taw-panel{position:fixed;right:18px;bottom:86px;z-index:80;width:min(370px,calc(100vw - 24px));max-height:min(560px,calc(100vh - 120px));display:none;flex-direction:column;background:#fff;border-radius:18px;box-shadow:0 24px 60px -18px rgba(10,30,80,.45);overflow:hidden;border:1px solid var(--line);}
+  .taw-panel{position:fixed;right:18px;bottom:18px;z-index:80;width:min(370px,calc(100vw - 24px));max-height:min(560px,calc(100vh - 120px));display:none;flex-direction:column;background:#fff;border-radius:18px;box-shadow:0 24px 60px -18px rgba(10,30,80,.45);overflow:hidden;border:1px solid var(--line);}
   .taw-panel.open{display:flex;}
   .taw-head{background:linear-gradient(135deg,#16489F,#0CA689);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;}
   .taw-head strong{font-size:15px;display:block;}
@@ -394,7 +394,7 @@
   .taw-in:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,72,159,.12);}
   .taw-send{border:none;background:var(--blue);color:#fff;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .taw-send svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-  @media(max-width:560px){.taw-bubble{right:14px;bottom:14px;}.taw-panel{right:12px;bottom:80px;}}
+  @media(max-width:560px){.taw-bubble{right:14px;bottom:14px;}.taw-panel{right:12px;bottom:14px;}}
 </style>
 </head>
 <body>
