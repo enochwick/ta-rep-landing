@@ -389,9 +389,14 @@
   .taw-chips{display:flex;flex-wrap:wrap;gap:6px;padding:4px 14px 10px;background:#F4F7FB;}
   .taw-chip{border:1px solid rgba(22,72,159,.3);background:#fff;color:var(--blue);font-size:12px;font-weight:600;border-radius:999px;padding:6px 11px;cursor:pointer;transition:background-color .15s;}
   .taw-chip:hover{background:rgba(22,72,159,.07);}
-  .taw-inrow{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff;}
-  .taw-in{flex:1;border:1px solid var(--line);border-radius:999px;padding:10px 14px;font-family:inherit;font-size:13.5px;color:var(--ink);outline:none;}
+  .taw-inrow{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:#fff;align-items:flex-end;}
+  .taw-in{flex:1;border:1px solid var(--line);border-radius:16px;padding:10px 14px;font-family:inherit;font-size:13.5px;color:var(--ink);outline:none;resize:none;max-height:120px;overflow-y:auto;line-height:1.45;}
   .taw-in:focus,.taw-in:focus-visible{outline:none;border-color:rgba(22,72,159,.45);box-shadow:0 0 0 2px rgba(22,72,159,.07);}
+  .taw-typing{display:inline-flex;gap:5px;padding:13px 14px;align-self:flex-start;}
+  .taw-typing i{width:7px;height:7px;border-radius:50%;background:#9AA8BF;animation:tawblink 1s infinite ease-in-out;}
+  .taw-typing i:nth-child(2){animation-delay:.15s;}
+  .taw-typing i:nth-child(3){animation-delay:.3s;}
+  @keyframes tawblink{0%,80%,100%{opacity:.25;transform:translateY(0);}40%{opacity:1;transform:translateY(-3px);}}
   .taw-send{border:none;background:var(--blue);color:#fff;border-radius:50%;width:40px;height:40px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .taw-send svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
   @media(max-width:560px){.taw-bubble{right:14px;bottom:14px;}.taw-panel{right:12px;bottom:14px;}}
@@ -819,7 +824,7 @@
   <div class="taw-msgs" id="tawMsgs"></div>
   <div class="taw-chips" id="tawChips"></div>
   <div class="taw-inrow">
-    <input class="taw-in" id="tawIn" type="text" placeholder="Type a question&hellip;" aria-label="Your question">
+    <textarea class="taw-in" id="tawIn" rows="1" placeholder="Type a question&hellip;" aria-label="Your question"></textarea>
     <button class="taw-send" id="tawSend" aria-label="Send"><svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg></button>
   </div>
 </div>
@@ -843,13 +848,37 @@
   var FALLBACK='I cover Total Ancillary basics — the Healthview 360 platform, our five product lines, services, and the independent rep program. For anything specific, call 888.332.7985 or start your application above and our team will follow up.';
   var bubble=document.getElementById('tawBubble'),panel=document.getElementById('tawPanel'),msgs=document.getElementById('tawMsgs'),input=document.getElementById('tawIn'),send=document.getElementById('tawSend'),closeBtn=document.getElementById('tawClose'),chips=document.getElementById('tawChips');
   var CHIPS=['What is Healthview 360?','What products do you carry?','How do I become a rep?','Contact info'];
-  function add(txt,who){var d=document.createElement('div');d.className='taw-m '+(who==='u'?'taw-user':'taw-bot');d.textContent=txt;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;}
-  function answer(q){var s=q.toLowerCase(),best=null,score=0;KB.forEach(function(e){var n=0;e.k.forEach(function(k){if(s.indexOf(k)>-1)n+=k.length;});if(n>score){score=n;best=e;}});setTimeout(function(){add(best?best.a:FALLBACK,'b');},450);}
-  function ask(q){if(!q)return;add(q,'u');input.value='';answer(q);}
+  var busy=false;
+  function add(txt,who){var d=document.createElement('div');d.className='taw-m '+(who==='u'?'taw-user':'taw-bot');d.textContent=txt;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d;}
+  function pick(q){var s=q.toLowerCase(),best=null,score=0;KB.forEach(function(e){var n=0;e.k.forEach(function(k){if(s.indexOf(k)>-1)n+=k.length;});if(n>score){score=n;best=e;}});return best?best.a:FALLBACK;}
+  function showTyping(){var t=document.createElement('div');t.className='taw-m taw-bot taw-typing';t.innerHTML='<i></i><i></i><i></i>';msgs.appendChild(t);msgs.scrollTop=msgs.scrollHeight;return t;}
+  function typeReply(text,done){
+    var d=document.createElement('div');d.className='taw-m taw-bot';msgs.appendChild(d);
+    msgs.scrollTop=Math.max(0,d.offsetTop-msgs.offsetTop-8);
+    var tokens=text.split(/(\s+)/),i=0;
+    (function tick(){
+      if(i>=tokens.length){done&&done();return;}
+      d.textContent+=tokens[i];
+      var isSpace=/^\s+$/.test(tokens[i]);i++;
+      setTimeout(tick,isSpace?0:34);
+    })();
+  }
+  function autosize(){input.style.height='auto';input.style.height=Math.min(input.scrollHeight,120)+'px';}
+  function ask(q){
+    if(!q||busy)return;busy=true;
+    add(q,'u');input.value='';autosize();
+    chips.style.display='none';
+    var t=showTyping();
+    setTimeout(function(){
+      t.remove();
+      typeReply(pick(q),function(){chips.style.display='flex';busy=false;});
+    },700);
+  }
+  input.addEventListener('input',autosize);
   bubble.addEventListener('click',function(){panel.classList.add('open');bubble.style.display='none';bubble.setAttribute('aria-expanded','true');if(!msgs.children.length){add('Hi! I’m the Total Ancillary assistant. Ask me about our platform, products, services, or the independent rep program.','b');}input.focus();});
   closeBtn.addEventListener('click',function(){panel.classList.remove('open');bubble.style.display='';bubble.setAttribute('aria-expanded','false');});
   send.addEventListener('click',function(){ask(input.value.trim());});
-  input.addEventListener('keydown',function(e){if(e.key==='Enter')ask(input.value.trim());});
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();ask(input.value.trim());}});
   CHIPS.forEach(function(c){var b=document.createElement('button');b.className='taw-chip';b.type='button';b.textContent=c;b.addEventListener('click',function(){ask(c);});chips.appendChild(b);});
 })();
 </script>
